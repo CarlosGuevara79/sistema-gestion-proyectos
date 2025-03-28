@@ -1,16 +1,16 @@
-import { useRouter } from 'next/router' 
-import { useEffect, useState } from 'react' 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query' 
-import { useAuth } from '@/context/AuthContext' 
-import { getTarea, editarTarea } from '@/services/tareas' 
-import { getComentariosByTarea, crearComentario } from '@/services/comentarios' 
-import { getUsuariosDelProyecto } from '@/services/proyectos' 
- 
-export default function TareaDetalle() { 
-  const router = useRouter() 
-  const tareaId = router.query.id 
-  const queryClient = useQueryClient() 
-  const { user } = useAuth() 
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useAuth } from '@/context/AuthContext'
+import { getTarea, editarTarea } from '@/services/tareas'
+import { getComentariosByTarea, crearComentario } from '@/services/comentarios'
+import { getUsuariosDelProyecto } from '@/services/proyectos'
+
+export default function TareaDetalle() {
+  const router = useRouter()
+  const tareaId = router.query.id
+  const queryClient = useQueryClient()
+  const { user } = useAuth()
 
   const [nuevoComentario, setNuevoComentario] = useState('')
   const [modalAbierto, setModalAbierto] = useState(false)
@@ -188,7 +188,7 @@ export default function TareaDetalle() {
                 className="bg-green-600 text-white px-4 py-2 rounded"
               >
                 Guardar </button>
-              <button onClick={() => setModalAbierto(false)}  className="text-gray-600"> Cancelar</button>
+              <button onClick={() => setModalAbierto(false)} className="text-gray-600"> Cancelar</button>
             </div>
           </div>
         </div>
