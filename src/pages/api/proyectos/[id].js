@@ -1,6 +1,8 @@
 import db from '@/models';
 
+
 export default async function handler(req, res) {
+  
   await db.sequelize.sync();
 
   const { id } = req.query;
@@ -8,7 +10,7 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     const proyecto = await Proyecto.findByPk(id);
-    if (!proyecto) return res.status(404).json({ error: 'No encontrado' });
+    if (!proyecto) return res.status(404).json({ error: 'Proyecto No encontrado' });
     return res.status(200).json(proyecto);
   }
 
@@ -22,4 +24,5 @@ export default async function handler(req, res) {
     await Proyecto.destroy({ where: { id } });
     return res.status(204).end();
   }
+  return res.status(405).json({ mensaje: 'Método no permitido' })
 }

@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+module.exports =  (sequelize, DataTypes) =>  {
     const Tarea = sequelize.define('Tarea', {
       titulo: DataTypes.STRING,
       descripcion: DataTypes.TEXT,
@@ -6,11 +6,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: 'pendiente'
       },
+      fecha_limite: DataTypes.DATEONLY
+    }, { 
       tableName: 'tareas',
       timestamps: true,
       createdAt: 'creado_en',  
-      fecha_limite: DataTypes.DATEONLY
-    }, { tableName: 'tareas', timestamps: true });
+      updatedAt: false,        // Si no tienes updatedAt
+     });
   
     Tarea.associate = models => {
       Tarea.belongsTo(models.Proyecto, { foreignKey: 'proyecto_id' });

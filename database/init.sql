@@ -5,13 +5,34 @@ GRANT ALL PRIVILEGES ON DATABASE gestion_proyectos TO admin;
 
 psql -U admin -d gestion_proyectos
 
+
+-- Tabla Roles
+CREATE TABLE roles (
+  id SERIAL PRIMARY KEY,
+  nombre VARCHAR(50) UNIQUE
+);
+
 -- Tabla Usuarios
 CREATE TABLE usuarios (
   id SERIAL PRIMARY KEY,
   nombre VARCHAR(100),
   email VARCHAR(100) UNIQUE,
   password VARCHAR(255),
+  rol_id INTEGER REFERENCES roles(id), -- nuevo campo
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla Permisos
+CREATE TABLE permisos (
+  id SERIAL PRIMARY KEY,
+  nombre VARCHAR(50) UNIQUE
+);
+
+-- Tabla intermedia: Roles ↔ Permisos
+CREATE TABLE roles_permisos (
+  rol_id INTEGER REFERENCES roles(id),
+  permiso_id INTEGER REFERENCES permisos(id),
+  PRIMARY KEY (rol_id, permiso_id)
 );
 
 -- Tabla Proyectos
@@ -37,26 +58,16 @@ CREATE TABLE tareas (
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla Roles
-CREATE TABLE roles (
-  id SERIAL PRIMARY KEY,
-  nombre VARCHAR(50) UNIQUE
-);
-
--- Tabla Permisos
-CREATE TABLE permisos (
-  id SERIAL PRIMARY KEY,
-  nombre VARCHAR(50) UNIQUE
-);
-
--- Relación muchos a muchos usuarios-proyectos
+-- Relación muchos a muchos: Usuarios ↔ Proyectos
 CREATE TABLE usuarios_proyectos (
   usuario_id INTEGER REFERENCES usuarios(id),
   proyecto_id INTEGER REFERENCES proyectos(id),
+  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
   PRIMARY KEY(usuario_id, proyecto_id)
 );
 
--- Tabla Comentarios (para tareas)
+-- Comentarios sobre tareas
 CREATE TABLE comentarios (
   id SERIAL PRIMARY KEY,
   tarea_id INTEGER REFERENCES tareas(id),
@@ -64,6 +75,23 @@ CREATE TABLE comentarios (
   comentario TEXT,
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Insertar roles
+INSERT INTO roles (nombre) VALUES ('Administrador'), ('Gerente'), ('Miembro');
+
+-- Insertar permisos (según tu lógica)
+INSERT INTO permisos (nombre) VALUES
+('crear_proyectos'),
+('editar_proyectos'),
+('eliminar_proyectos'),
+('asignar_tareas'),
+('editar_tareas'),
+('ver_todo');
+
+-- Ejemplo: asignar todos los permisos al Administrador (rol_id = 1)
+INSERT INTO roles_permisos (rol_id, permiso_id)
+SELECT 1, id FROM permisos;
+
 
 -- verificar TABLA
 \dt

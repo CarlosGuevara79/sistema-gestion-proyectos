@@ -1,23 +1,32 @@
-import { Tarea, sequelize } from '@/models';
+import db from '@/models'
 
 export default async function handler(req, res) {
-  const { id } = req.query;
-  await sequelize.sync();
+  await db.sequelize.sync();
+  const { method, query: { id }, body } = req
+  const { Tarea } = db;
 
-  if (req.method === 'GET') {
-    const tarea = await Tarea.findByPk(id);
-    if (!tarea) return res.status(404).json({ error: 'Tarea no encontrada' });
-    res.status(200).json(tarea);
-  }
+  try {
+    const tarea = await Tarea.findByPk(id)
 
-  if (req.method === 'PUT') {
-    await Tarea.update(req.body, { where: { id } });
-    const tarea = await Tarea.findByPk(id);
-    res.status(200).json(tarea);
-  }
+    if (!tarea) return res.status(404).json({ error: 'Tarea no encontrada' })
 
-  if (req.method === 'DELETE') {
-    await Tarea.destroy({ where: { id } });
-    res.status(204).end();
+    if (method === 'GET') {
+      return res.status(200).json(tarea)
+    }
+
+    if (method === 'PUT') {
+      await tarea.update(body)
+      return res.status(200).json(tarea)
+    }
+
+    if (method === 'DELETE') {
+      await tarea.destroy()
+      return res.status(204).end()
+    }
+
+    return res.status(405).end(`Method ${method} Not Allowed`)
+  } catch (error) {
+    console.error('Error en /api/tareas/[id]:', error)
+    return res.status(500).json({ error: 'Error del servidor' })
   }
 }

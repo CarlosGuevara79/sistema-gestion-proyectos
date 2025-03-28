@@ -11,7 +11,12 @@ import ComentarioModel from './comentario.js'
 const env = process.env.NODE_ENV || 'development'
 const config = configFile[env]
 
-const sequelize = new Sequelize(config.url, config)
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config
+)
 
 const db = {
   Usuario: UsuarioModel(sequelize, DataTypes),

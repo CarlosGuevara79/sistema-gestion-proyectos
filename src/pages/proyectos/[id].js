@@ -1,13 +1,41 @@
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getProyecto, actualizarProyecto } from '@/services/proyectos'
-import { getTareasByProyecto, crearTarea, eliminarTarea } from '@/services/tareas'
+import { getProyecto, actualizarProyecto, getUsuariosDelProyecto, asignarUsuarioAProyecto } from '@/services/proyectos'
+import { getTareasByProyecto, crearTarea, eliminarTarea, editarTarea } from '@/services/tareas'
+import { useAuth } from '@/context/AuthContext'
+import Link from 'next/link'
+import axios from 'axios'
 
 export default function ProyectoDetalle() {
   const router = useRouter()
   const proyectoId = router.query.id
   const queryClient = useQueryClient()
+  const { user } = useAuth()
+  const esAdminOGerente = user?.rol === 'Administrador' || user?.rol === 'Gerente'
+
+  const [editandoId, setEditandoId] = useState(null)
+  const [tareaEditada, setTareaEditada] = useState('')
+  const [mostrarModal, setMostrarModal] = useState(false)
+  const [nuevaTarea, setNuevaTarea] = useState({ titulo: '', descripcion: '', asignado_a: '' })
+  const [form, setForm] = useState({ nombre: '', descripcion: '' })
+  const [nuevoMiembroId, setNuevoMiembroId] = useState('')
+
+  const { data: usuariosProyecto } = useQuery({
+    queryKey: ['usuarios_proyecto', proyectoId],
+    queryFn: () => getUsuariosDelProyecto(proyectoId),
+    enabled: !!proyectoId
+  })
+
+  const { data: todosLosUsuarios } = useQuery({
+    queryKey: ['usuarios'],
+    queryFn: async () => (await axios.get('/api/usuarios')).data
+  })
+
+  //valida si se pueden asignar nuevos usuarios y los que ya estan no los muestra
+  const usuariosAsignables = todosLosUsuarios?.filter(
+    u => !usuariosProyecto?.some(up => up.id === u.id)
+  )
 
   const { data: proyecto, isLoading } = useQuery({
     queryKey: ['proyecto', proyectoId],
@@ -21,9 +49,6 @@ export default function ProyectoDetalle() {
     enabled: !!proyectoId
   })
 
-  const [form, setForm] = useState({ nombre: '', descripcion: '' })
-  const [nuevaTarea, setNuevaTarea] = useState({ titulo: '' })
-
   const proyectoMutation = useMutation({
     mutationFn: data => actualizarProyecto(proyectoId, data),
     onSuccess: () => queryClient.invalidateQueries(['proyecto', proyectoId])
@@ -32,8 +57,17 @@ export default function ProyectoDetalle() {
   const tareaMutation = useMutation({
     mutationFn: crearTarea,
     onSuccess: () => {
-      setNuevaTarea({ titulo: '' })
       queryClient.invalidateQueries(['tareas', proyectoId])
+      setMostrarModal(false)
+      setNuevaTarea({ titulo: '', descripcion: '', asignado_a: '' })
+    }
+  })
+
+  const editarTareaMutation = useMutation({
+    mutationFn: ({ id, data }) => editarTarea(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['tareas', proyectoId])
+      setEditandoId(null)
     }
   })
 
@@ -42,55 +76,183 @@ export default function ProyectoDetalle() {
     onSuccess: () => queryClient.invalidateQueries(['tareas', proyectoId])
   })
 
+  const asignarMutation = useMutation({
+    mutationFn: (usuario_id) => asignarUsuarioAProyecto(proyectoId, usuario_id),
+    onSuccess: () => {
+      setNuevoMiembroId('')
+      queryClient.invalidateQueries(['usuarios_proyecto', proyectoId])
+    }
+  })
+
   useEffect(() => {
     if (proyecto) setForm({ nombre: proyecto.nombre, descripcion: proyecto.descripcion })
   }, [proyecto])
 
-  if (isLoading) return "Cargando..."
+  if (isLoading || !proyecto) return <p className="p-10">Cargando proyecto...</p>
 
   return (
     <div className="p-10">
-      <h1 className="text-3xl font-bold mb-6">{proyecto.nombre}</h1>
+      <Link href="/dashboard">
+        <h1 className="text-3xl font-bold mb-6">{proyecto.nombre}</h1>
+      </Link>
 
-      <div className="mb-6 bg-white shadow p-6 rounded">
-        <h2 className="font-bold mb-2">Editar Proyecto</h2>
-        <input
-          className="border rounded p-2 w-full mb-2"
-          value={form.nombre}
-          onChange={e => setForm({...form, nombre: e.target.value})}
-        />
-        <textarea
-          className="border rounded p-2 w-full mb-2"
-          value={form.descripcion}
-          onChange={e => setForm({...form, descripcion: e.target.value})}
-        />
-        <button
-          onClick={() => proyectoMutation.mutate(form)}
-          className="bg-blue-500 text-white py-2 px-4 rounded">
-          Guardar Cambios
-        </button>
-      </div>
-
-      <div className="bg-white shadow p-6 rounded">
-        <h2 className="font-bold mb-2">Tareas</h2>
-        <input
-          className="border rounded p-2 w-full mb-2"
-          placeholder="Título de la tarea"
-          value={nuevaTarea.titulo}
-          onChange={e => setNuevaTarea({ titulo: e.target.value })}
-        />
-        <button
-          onClick={() => tareaMutation.mutate({ ...nuevaTarea, proyecto_id: proyectoId })}
-          className="bg-green-500 text-white py-2 px-4 rounded">
-          Crear Tarea
-        </button>
-
-        {tareas?.map(tarea => (
-          <div key={tarea.id} className="mt-2 flex justify-between items-center border-b py-2">
-            <p>{tarea.titulo}</p>
-            <button onClick={() => eliminarTareaMutation.mutate(tarea.id)} className="text-red-500">Eliminar</button>
+      {esAdminOGerente && (
+        <>
+          {/* Edición básica del proyecto */}
+          <div className="bg-white p-6 rounded shadow mb-6">
+            <h2 className="font-bold mb-2">Editar Proyecto</h2>
+            <input
+              className="border p-2 rounded w-full mb-2"
+              value={form.nombre}
+              onChange={e => setForm({ ...form, nombre: e.target.value })}
+            />
+            <textarea
+              className="border p-2 rounded w-full mb-2"
+              value={form.descripcion}
+              onChange={e => setForm({ ...form, descripcion: e.target.value })}
+            />
+            <button
+              onClick={() => proyectoMutation.mutate(form)}
+              className="bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Guardar Cambios
+            </button>
           </div>
-        ))}
+
+          {/* Asignar miembros */}
+          <div className="bg-white p-6 rounded shadow mb-6">
+            <h2 className="font-bold mb-2">Asignar Miembro</h2>
+            <div className="flex gap-2">
+              <select
+                className="border p-2 rounded w-full"
+                value={nuevoMiembroId}
+                onChange={(e) => setNuevoMiembroId(e.target.value)}
+              >
+                <option value="">Selecciona un usuario</option>
+                {usuariosAsignables?.map((u) => (
+                  <option key={u.id} value={u.id}>{u.nombre}</option>
+                ))}
+              </select>
+              <button
+                disabled={!nuevoMiembroId}
+                onClick={() => asignarMutation.mutate(nuevoMiembroId)}
+                className="bg-indigo-600 text-white px-4 py-2 rounded disabled:opacity-50"
+              >
+                Agregar
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Botón para abrir modal de nueva tarea */}
+      {esAdminOGerente && (
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={() => setMostrarModal(true)}
+            className="bg-green-600 text-white px-4 py-2 rounded"
+          >
+            + Nueva Tarea
+          </button>
+        </div>
+      )}
+
+      {/* Modal para nueva tarea */}
+      {mostrarModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded shadow-md w-full max-w-lg">
+            <h2 className="text-lg font-bold mb-4">Crear Nueva Tarea</h2>
+
+            <label className="block text-sm font-medium">Título</label>
+            <input
+              className="w-full border rounded p-2 mb-2"
+              value={nuevaTarea.titulo}
+              onChange={(e) => setNuevaTarea({ ...nuevaTarea, titulo: e.target.value })}
+            />
+
+            <label className="block text-sm font-medium">Descripción</label>
+            <textarea
+              className="w-full border rounded p-2 mb-2"
+              value={nuevaTarea.descripcion}
+              onChange={(e) => setNuevaTarea({ ...nuevaTarea, descripcion: e.target.value })}
+            />
+
+            <label className="block text-sm font-medium">Asignar a</label>
+            <select
+              className="w-full border p-2 rounded mb-2"
+              value={nuevaTarea.asignado_a}
+              onChange={(e) => setNuevaTarea({ ...nuevaTarea, asignado_a: e.target.value })}
+            >
+              <option value="">Selecciona un usuario</option>
+              {usuariosProyecto?.map((u) => (
+                <option key={u.id} value={u.id}>{u.nombre}</option>
+              ))}
+            </select>
+
+            <div className="flex justify-end gap-2 mt-4">
+              <button onClick={() => setMostrarModal(false)} className="px-4 py-2 border rounded">
+                Cancelar
+              </button>
+              <button
+                onClick={() => tareaMutation.mutate({ ...nuevaTarea, proyecto_id: proyectoId })}
+                disabled={!nuevaTarea.titulo || !nuevaTarea.asignado_a}
+                className="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+              >
+                Crear
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sección de tareas */}
+      <div className="mt-10">
+        <h2 className="text-2xl font-bold mb-4">Tareas del Proyecto</h2>
+        {tareas?.map((tarea) => {
+          const puedeEditar = esAdminOGerente || tarea.asignado_a === user?.id
+          const estaAsignadaAlUsuario = tarea.asignado_a === user?.id
+
+          return (
+            <div key={tarea.id} className="bg-white p-4 rounded shadow mb-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <Link href={`/tareas/${tarea.id}`}>
+                    <h3 className="text-lg font-bold cursor-pointer hover:underline">{tarea.titulo}</h3>
+                    <p className="text-sm text-gray-600">
+                      Estado: <span className={`font-semibold ${tarea.estado === 'completada' ? 'text-green-600' : 'text-yellow-600'}`}>{tarea.estado}</span>
+                      {estaAsignadaAlUsuario && (
+                        <span className="ml-2 text-green-700 font-semibold">(Asignada a ti)</span>
+                      )}
+                    </p>
+                  </Link>
+                </div>
+
+                {puedeEditar && (
+                  <div className="flex items-center gap-2">
+                    <select
+                      className="text-sm border p-1 rounded"
+                      value={tarea.estado}
+                      onChange={(e) => editarTareaMutation.mutate({ id: tarea.id, data: { estado: e.target.value } })}
+                    >
+                      <option value="pendiente">Pendiente</option>
+                      <option value="en progreso">En progreso</option>
+                      <option value="completada">Completada</option>
+                    </select>
+
+                    {esAdminOGerente && (
+                      <button
+                        onClick={() => eliminarTareaMutation.mutate(tarea.id)}
+                        className="text-red-500 text-sm"
+                      >
+                        Eliminar
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

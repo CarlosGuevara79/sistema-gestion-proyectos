@@ -1,4 +1,4 @@
-export default (sequelize, DataTypes) => {
+module.exports =  (sequelize, DataTypes) => {
   const Proyecto = sequelize.define('Proyecto', {
     nombre: DataTypes.STRING,
     descripcion: DataTypes.TEXT,
@@ -15,6 +15,11 @@ export default (sequelize, DataTypes) => {
   Proyecto.associate = models => {
     Proyecto.belongsTo(models.Usuario, { foreignKey: 'creado_por' });
     Proyecto.hasMany(models.Tarea, { foreignKey: 'proyecto_id' });
+    Proyecto.belongsToMany(models.Usuario, {
+      through: 'usuarios_proyectos',
+      foreignKey: 'proyecto_id',
+      otherKey: 'usuario_id'
+    })
   };
 
   return Proyecto;

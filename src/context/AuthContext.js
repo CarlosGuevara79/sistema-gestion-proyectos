@@ -1,42 +1,36 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { createContext, useContext, useState, useEffect } from 'react'
+import axios from 'axios'
 
-const AuthContext = createContext();
+const AuthContext = createContext()
 
-export const useAuth = () => useContext(AuthContext);
-
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
-
-  const login = async (email, password) => {
-    // Simulación simple (reemplazar por API real luego)
-    if(email === "usuario@test.com" && password === "password") {
-      const fakeUser = { id: 1, email };
-      setUser(fakeUser);
-      localStorage.setItem('user', JSON.stringify(fakeUser));
-      router.push('/dashboard');
-    } else {
-      alert("Credenciales incorrectas");
-    }
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-    router.push('/');
-  };
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if(storedUser) setUser(storedUser);
-    setLoading(false);
-  }, []);
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+    }
+    setLoading(false)
+  }, [])
+
+  const login = async (email, password) => {
+    const res = await axios.post('/api/auth/login', { email, password })
+    localStorage.setItem('user', JSON.stringify(res.data))
+    setUser(res.data)
+  }
+
+  const logout = () => {
+    localStorage.removeItem('user')
+    setUser(null)
+  }
 
   return (
     <AuthContext.Provider value={{ user, login, logout, loading }}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
+
+export const useAuth = () => useContext(AuthContext)
