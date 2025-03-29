@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext'
 import { getTarea, editarTarea } from '@/services/tareas'
 import { getComentariosByTarea, crearComentario } from '@/services/comentarios'
 import { getUsuariosDelProyecto } from '@/services/proyectos'
+import BackButton from '@/components/ui/BackButton'
 
 export default function TareaDetalle() {
   const router = useRouter()
@@ -79,6 +80,8 @@ export default function TareaDetalle() {
 
   return (
     <div className="p-8 max-w-3xl mx-auto bg-white rounded shadow">
+            <BackButton className="mb-4" />
+
       <h1 className="text-2xl font-bold mb-4">Detalle de Tarea</h1>
 
       <h2 className="text-xl font-bold">{tarea.titulo}</h2>

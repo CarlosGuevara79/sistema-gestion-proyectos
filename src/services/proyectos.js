@@ -7,4 +7,5 @@ export const actualizarProyecto = (id, data) => axios.put(`/api/proyectos/${id}`
 export const eliminarProyecto = (id) => axios.delete(`/api/proyectos/${id}`);
 export const getUsuariosDelProyecto = (proyectoId) =>  axios.get(`/api/proyectos/${proyectoId}/usuarios`).then(res => res.data)
 export const asignarUsuarioAProyecto = (proyectoId, usuario_id) => axios.post(`/api/proyectos/${proyectoId}/asignar`, { usuario_id })
+export const desasignarUsuarioDeProyecto = (proyectoId, usuario_id) => axios.post(`/api/proyectos/${proyectoId}/desasignar`, { usuario_id }).then(res => res.data)
   

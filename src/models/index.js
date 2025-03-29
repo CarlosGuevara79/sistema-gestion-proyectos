@@ -27,6 +27,27 @@ const db = {
   Comentario: ComentarioModel(sequelize, DataTypes),
 }
 
+// Tabla intermedia claramente definida
+const Usuarios_Proyectos = sequelize.define('usuarios_proyectos', {
+  usuario_id: {
+    type: DataTypes.INTEGER,
+    references: { model: 'usuarios', key: 'id' },
+  },
+  proyecto_id: {
+    type: DataTypes.INTEGER,
+    references: { model: 'proyectos', key: 'id' },
+  }
+}, {
+  timestamps: false,
+  tableName: 'usuarios_proyectos'
+})
+
+db.Usuarios_Proyectos = Usuarios_Proyectos
+
+// Asociaciones claras y correctas:
+db.Usuario.belongsToMany(db.Proyecto, { through: Usuarios_Proyectos, foreignKey: 'usuario_id' })
+db.Proyecto.belongsToMany(db.Usuario, { through: Usuarios_Proyectos, foreignKey: 'proyecto_id' })
+
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db)
