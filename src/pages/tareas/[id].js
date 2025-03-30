@@ -6,6 +6,7 @@ import { getTarea, editarTarea } from '@/services/tareas'
 import { getComentariosByTarea, crearComentario } from '@/services/comentarios'
 import { getUsuariosDelProyecto } from '@/services/proyectos'
 import BackButton from '@/components/ui/BackButton'
+import Loading from '@/components/ui/Loading'
 
 export default function TareaDetalle() {
   const router = useRouter()
@@ -17,6 +18,9 @@ export default function TareaDetalle() {
   const [modalAbierto, setModalAbierto] = useState(false)
   const [formEdit, setFormEdit] = useState({ titulo: '', descripcion: '', estado: '', asignado_a: '' })
   const [puedeComentar, setPuedeComentar] = useState(false)
+  //variable para saber si el usuario puede editar o no 
+  const puedeEditar = tarea.asignado_a === user?.id || esAdminOGerente
+  const esAdminOGerente = user?.rol === 'Administrador' || user?.rol === 'Gerente'
 
   const { data: tarea, isLoading: cargandoTarea } = useQuery({
     queryKey: ['tarea', tareaId],
@@ -52,8 +56,6 @@ export default function TareaDetalle() {
     }
   })
 
-  const esAdminOGerente = user?.rol === 'Administrador' || user?.rol === 'Gerente'
-
   useEffect(() => {
     if (tarea) {
       setFormEdit({
@@ -71,10 +73,7 @@ export default function TareaDetalle() {
     }
   }, [tarea, usuariosProyecto, user])
 
-  if (cargandoTarea || !tarea) return <p className="p-10">Cargando tarea...</p>
-
-  //variable para saber si el usuario puede editar o no 
-  const puedeEditar = tarea.asignado_a === user?.id || esAdminOGerente
+  if (cargandoTarea || !tarea) return <Loading/>
 
   // console.log(puedeEditar)
 

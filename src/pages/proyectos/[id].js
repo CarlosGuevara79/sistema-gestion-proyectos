@@ -9,6 +9,7 @@ import axios from 'axios'
 import Modal from '@/components/ui/Modal'
 import InputField from '@/components/ui/InputField'
 import BackButton from '@/components/ui/BackButton'
+import Loading from '@/components/ui/Loading'
 
 export default function ProyectoDetalle() {
   const router = useRouter()
@@ -101,7 +102,7 @@ export default function ProyectoDetalle() {
     if (proyecto) setForm({ nombre: proyecto.nombre, descripcion: proyecto.descripcion })
   }, [proyecto])
 
-  if (isLoading || !proyecto) return <p className="p-10">Cargando proyecto...</p>
+  if (isLoading || !proyecto) return <Loading/>
 
   return (
     <div className="p-10">

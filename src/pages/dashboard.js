@@ -3,6 +3,7 @@ import { getProyectos } from '@/services/proyectos'
 import { getTareas } from '@/services/tareas'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
+import Loading from '@/components/ui/Loading'
 
 export default function Dashboard() {
   const { user } = useAuth()
@@ -21,9 +22,9 @@ export default function Dashboard() {
     t => t.asignado_a === user?.id
   )
 
-  console.log("as", tareasAsignadas)
+  // console.log("as", tareasAsignadas)
 
-  if (loadingProyectos || loadingTareas) return <p className="p-10">Cargando información...</p>
+  if (loadingProyectos || loadingTareas) return <Loading/>
 
   const totalTareas = tareasAsignadas.filter(t => t.estado === 'pendiente').length
   const tareasEnProgreso = tareasAsignadas.filter(t => t.estado === 'en progreso').length

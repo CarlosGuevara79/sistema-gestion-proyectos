@@ -7,6 +7,7 @@ import { useState } from 'react'
 import Modal from '@/components/ui/Modal'
 import BackButton from '@/components/ui/BackButton'
 import { editarUsuario } from '@/services/usuarios'
+import Loading from '@/components/ui/Loading'
 
 export default function GestionRoles() {
   const { user } = useAuth()
@@ -53,7 +54,7 @@ export default function GestionRoles() {
     setModalAbierto(true)
   }
 
-  if (loadingUsuarios || loadingRoles) return <p className="p-10">Cargando información...</p>
+  if (loadingUsuarios || loadingRoles) return <Loading />
 
   return (
     <div className="p-10">

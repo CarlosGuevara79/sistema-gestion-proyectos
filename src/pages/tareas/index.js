@@ -4,6 +4,7 @@ import { getTareas } from '@/services/tareas'
 import Link from 'next/link'
 import { useState } from 'react'
 import BackButton from '@/components/ui/BackButton'
+import Loading from '@/components/ui/Loading'
 
 export default function MisTareas() {
   const { user } = useAuth()
@@ -15,7 +16,7 @@ export default function MisTareas() {
     queryFn: getTareas
   })
 
-  if (isLoading) return <p className="p-10">Cargando tareas...</p>
+  if (isLoading) return <Loading/>
 
   const tareasAsignadas = tareas?.filter(
     t => t.asignado_a === user?.id
