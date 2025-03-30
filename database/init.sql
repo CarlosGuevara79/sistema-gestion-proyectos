@@ -62,8 +62,7 @@ CREATE TABLE tareas (
 CREATE TABLE usuarios_proyectos (
   usuario_id INTEGER REFERENCES usuarios(id),
   proyecto_id INTEGER REFERENCES proyectos(id),
-  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-
+  creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(usuario_id, proyecto_id)
 );
 
