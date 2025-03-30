@@ -24,14 +24,14 @@ export default function ProyectoDetalle() {
   const [form, setForm] = useState({ nombre: '', descripcion: '' })
   const [nuevoMiembroId, setNuevoMiembroId] = useState('')
   const [mostrarEditarModal, setMostrarEditarModal] = useState(false)
-  
+
   const { data: usuariosProyecto } = useQuery({
     queryKey: ['usuarios_proyecto', proyectoId],
     queryFn: () => getUsuariosDelProyecto(proyectoId),
     enabled: !!proyectoId
   })
-  console.log("proyecto id",proyectoId)
-  console.log("usuarios proyecto",usuariosProyecto)
+  console.log("proyecto id", proyectoId)
+  console.log("usuarios proyecto", usuariosProyecto)
 
   const { data: todosLosUsuarios } = useQuery({
     queryKey: ['usuarios'],
@@ -42,14 +42,12 @@ export default function ProyectoDetalle() {
     u => !usuariosProyecto?.some(up => up.id === u.id)
   )
 
-const desasignarMutation = useMutation({
-  mutationFn: usuario_id => desasignarUsuarioDeProyecto(proyectoId, usuario_id),
-  onSuccess: () => {
-    queryClient.invalidateQueries(['usuarios_proyecto', proyectoId])
-    showToast('Usuario desasignado exitosamente', 'success')
-  },
-  onError: () => showToast('Error al desasignar usuario', 'error')
-})
+  const desasignarMutation = useMutation({
+    mutationFn: usuario_id => desasignarUsuarioDeProyecto(proyectoId, usuario_id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['usuarios_proyecto', proyectoId])
+    }
+  })
 
 
   const { data: proyecto, isLoading } = useQuery({
@@ -107,7 +105,7 @@ const desasignarMutation = useMutation({
 
   return (
     <div className="p-10">
-            <BackButton className="mb-4" />
+      <BackButton className="mb-4" />
 
       <Link href="/dashboard">
         <h1 className="text-3xl font-bold mb-6">{proyecto.nombre}</h1>
@@ -127,7 +125,7 @@ const desasignarMutation = useMutation({
               value={form.descripcion}
               onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
             />
-          
+
             {/* Lista de miembros actuales con opción para desasignar */}
             <h2 className="font-bold mb-2">Miembros del Proyecto</h2>
             <ul className="flex gap-2 flex-wrap mb-4">

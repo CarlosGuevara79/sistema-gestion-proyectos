@@ -1,4 +1,5 @@
 export default function InputField({ label, value, onChange, name, required = false, error, type = "text", ...props }) {
+  /// creacion de inputField
     return (
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
