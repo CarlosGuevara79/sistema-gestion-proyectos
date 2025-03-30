@@ -9,6 +9,7 @@ import ComentarioModel from './comentario.js'
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
+  dialectModule: pg, // I've added this.
   dialectOptions: {
     ssl: {
       require: true,
