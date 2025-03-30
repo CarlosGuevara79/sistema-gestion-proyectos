@@ -42,10 +42,14 @@ export default function Sidebar() {
         <Link href="/dashboard" className="block py-2 hover:underline">
           {open ? <span className="font-semibold">📁 Mis Proyectos</span> : '📁'}
         </Link>
-
         <Link href="/tareas" className="block py-2 hover:underline">
           {open ? <span className="font-semibold">✅ Mis Tareas</span> : '✅'}
         </Link>
+        {user?.rol === 'Administrador' && (
+          <Link href="/admin/gestion-roles" className="block py-2 hover:underline">
+            {open ? <span className="font-semibold">📜 Gestion de Roles</span> : '📜'}
+            </Link>
+        )}
       </nav>
 
       {/* Cerrar sesión al fondo */}

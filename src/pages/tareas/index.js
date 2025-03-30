@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext'
 import { getTareas } from '@/services/tareas'
 import Link from 'next/link'
 import { useState } from 'react'
+import BackButton from '@/components/ui/BackButton'
 
 export default function MisTareas() {
   const { user } = useAuth()
@@ -24,9 +25,12 @@ export default function MisTareas() {
     t.titulo.toLowerCase().includes(busqueda.toLowerCase()) &&
     (filtroEstado === '' || t.estado === filtroEstado)
   )
+  
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
+            <BackButton className="mb-4" />
+      
       <h1 className="text-2xl font-bold mb-6">Mis Tareas Asignadas</h1>
 
       {/* Filtros */}

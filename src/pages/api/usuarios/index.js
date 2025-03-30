@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     const usuarios = await db.Usuario.findAll({
-      attributes: ['id', 'nombre']
+      attributes: ['id', 'nombre','rol_id','email']
     })
     return res.status(200).json(usuarios)
   }
