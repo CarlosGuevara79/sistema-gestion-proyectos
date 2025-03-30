@@ -12,7 +12,7 @@ export default function Registro() {
 
   useEffect(() => {
     if (user) router.push('/dashboard')
-  }, [user])
+  }, [user,router])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

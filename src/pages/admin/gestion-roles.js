@@ -23,10 +23,12 @@ export default function GestionRoles() {
   const esEmailValido = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
-  if (user?.rol !== 'Administrador') {
-    router.push('/dashboard')
-    return null
-  }
+  
+  useEffect(() => {
+    if (user?.rol !== 'Administrador') {
+      router.push('/dashboard')
+    }
+  }, [user, router])
 
   const { data: usuarios, isLoading: loadingUsuarios } = useQuery({
     queryKey: ['usuarios'],
@@ -54,7 +56,7 @@ export default function GestionRoles() {
     setModalAbierto(true)
   }
 
-  if (loadingUsuarios || loadingRoles) return <Loading />
+  if (loadingUsuarios || loadingRoles) return <Loading/>
 
   return (
     <div className="p-10">

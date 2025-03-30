@@ -19,8 +19,6 @@ export default function TareaDetalle() {
   const [formEdit, setFormEdit] = useState({ titulo: '', descripcion: '', estado: '', asignado_a: '' })
   const [puedeComentar, setPuedeComentar] = useState(false)
   //variable para saber si el usuario puede editar o no 
-  const puedeEditar = tarea.asignado_a === user?.id || esAdminOGerente
-  const esAdminOGerente = user?.rol === 'Administrador' || user?.rol === 'Gerente'
 
   const { data: tarea, isLoading: cargandoTarea } = useQuery({
     queryKey: ['tarea', tareaId],
@@ -76,7 +74,8 @@ export default function TareaDetalle() {
   if (cargandoTarea || !tarea) return <Loading/>
 
   // console.log(puedeEditar)
-
+  const puedeEditar = tarea.asignado_a === user?.id || esAdminOGerente
+  const esAdminOGerente = user?.rol === 'Administrador' || user?.rol === 'Gerente'
   return (
     <div className="p-8 max-w-3xl mx-auto bg-white rounded shadow">
             <BackButton className="mb-4" />

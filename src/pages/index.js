@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 export default function Home() {
   const { login, user, loading } = useAuth()
@@ -10,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!loading && user) router.push('/dashboard')
-  }, [user, loading])
+  }, [user, loading,router])
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -33,7 +34,7 @@ export default function Home() {
           Ingresar
         </button>
         <p className="mt-4 text-sm text-center">
-          ¿No tienes una cuenta? <a href="/registro" className="text-blue-600 underline">Regístrate aquí</a>
+          ¿No tienes una cuenta? <Link href="/registro" className="text-blue-600 underline">Regístrate aquí</Link>
         </p>
       </form>
     </div>

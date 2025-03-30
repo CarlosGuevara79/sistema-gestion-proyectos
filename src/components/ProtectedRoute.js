@@ -10,7 +10,7 @@ export default function ProtectedRoute({ children }) {
     if (!loading && !user) {
       router.push('/')
     }
-  }, [user, loading])
+  }, [user, loading,router])
 
   if (loading || !user) {
     return <div className="p-10">Verificando sesión...</div>

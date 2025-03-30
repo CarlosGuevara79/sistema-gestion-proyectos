@@ -8,7 +8,7 @@ export default function useRequireAuth() {
 
   useEffect(() => {
     if (!user) {
-      router.push('/') // si el usuario no esta loggeado lo redirecciona
+      router.push('/login')
     }
-  }, [user])
+  }, [user, router])
 }
