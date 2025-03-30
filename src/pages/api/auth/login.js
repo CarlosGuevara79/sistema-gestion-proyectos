@@ -20,6 +20,8 @@ export default async function handler(req, res) {
     if (!match) {
       return res.status(401).json({ error: 'Credenciales inválidas' })
     }
+
+    // Devolver datos esenciales del usuario
     const { id, nombre, rol_id, Rol } = usuario
     return res.status(200).json({ id, nombre, email, rol_id, rol: Rol?.nombre })
   }

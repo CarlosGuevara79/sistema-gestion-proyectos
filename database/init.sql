@@ -88,8 +88,7 @@ INSERT INTO permisos (nombre) VALUES
 ('ver_todo');
 
 -- Ejemplo: asignar todos los permisos al Administrador (rol_id = 1)
-INSERT INTO roles_permisos (rol_id, permiso_id)
-SELECT 1, id FROM permisos;
+INSERT INTO roles_permisos (rol_id, permiso_id) SELECT 1, id FROM permisos;
 
 
 -- verificar TABLA

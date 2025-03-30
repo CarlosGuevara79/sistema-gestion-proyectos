@@ -8,19 +8,15 @@ import RolModel from './rol.js'
 import PermisoModel from './permiso.js'
 import ComentarioModel from './comentario.js'
 
-const env = process.env.NODE_ENV
+const env = process.env.NODE_ENV || 'development'
 const config = configFile[env]
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres',
-  protocol: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  }
-})
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config
+)
 
 const db = {
   Usuario: UsuarioModel(sequelize, DataTypes),
