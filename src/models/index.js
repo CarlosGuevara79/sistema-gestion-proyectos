@@ -1,5 +1,4 @@
 import { Sequelize, DataTypes } from 'sequelize'
-import configFile from '../../config/config.js'
 
 import UsuarioModel from './usuario.js'
 import ProyectoModel from './proyecto.js'
@@ -8,15 +7,16 @@ import RolModel from './rol.js'
 import PermisoModel from './permiso.js'
 import ComentarioModel from './comentario.js'
 
-const env = process.env.NODE_ENV || 'development'
-const config = configFile[env]
-
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  config
-)
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  }
+})
+console.log("✅ DATABASE_URL:", process.env.DATABASE_URL)
 
 const db = {
   Usuario: UsuarioModel(sequelize, DataTypes),
@@ -44,7 +44,7 @@ const Usuarios_Proyectos = sequelize.define('usuarios_proyectos', {
 
 db.Usuarios_Proyectos = Usuarios_Proyectos
 
-// Asociaciones claras y correctas:
+// Asociaciones
 db.Usuario.belongsToMany(db.Proyecto, { through: Usuarios_Proyectos, foreignKey: 'usuario_id' })
 db.Proyecto.belongsToMany(db.Usuario, { through: Usuarios_Proyectos, foreignKey: 'proyecto_id' })
 
