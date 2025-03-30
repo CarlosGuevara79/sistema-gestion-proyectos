@@ -22,7 +22,7 @@ export default function Dashboard() {
     t => t.asignado_a === user?.id
   )
 
-  // console.log("as", tareasAsignadas)
+  console.log("as", tareasAsignadas)
 
   if (loadingProyectos || loadingTareas) return <Loading />
 
