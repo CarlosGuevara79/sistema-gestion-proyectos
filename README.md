@@ -1,40 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
-## Getting Started
+![UDB](https://www.udb.edu.sv/udb_files/content_resource/es//Logo_8.5.jpg)
 
-First, run the development server:
+
+# Sistema gestion de proyectos 📁📂
+
+Proyecto para la materia DPS desarrollar un sistema de gestión de proyectos utilizando React y Next que permita a los
+usuarios registrarse, iniciar sesión y gestionar proyectos y tareas. El sistema debe
+interactuar con una API REST para almacenar y recuperar datos. 
+## Installation💻
+
+#### Para poder ejecutar el proyecto se recomienda ejecutar lo siguiente 💡
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/CarlosGuevara79/sistema-gestion-proyectos.git
+cd sistema-gestion-proyectos
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### instalar dependencias 💡
+```bash
+npm install
+```
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Creacion de archivo .env.local💡
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+#### si deseas utilizar una base de datos local puedes tomar la base de la carpeta /database que se encuentra en el proyecto y agrega la url de lo que creaste a tu env.local💡
+```bash
+DATABASE_URL=postgres://usuario:contraseña@host:puerto/nombre_db
+NEXTAUTH_SECRET=una-clave-secreta-segura
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+#### si deseas utilizar la base de datos existente en supabase solo adjunta estos campos en tu .env.local💡
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:4000/api
+DATABASE_URL="postgres://postgres.gkzttocipkgjmeeebijx:pozScSrGMJaYSa2Y@aws-0-us-east-1.pooler.supabase.com:6543/postgres"
+NEXTAUTH_SECRET=33962fbb-7f8b-41d4-bdd6-02b4b476f89c
+```
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+## Authors 👨🏾‍💻👨🏾‍💻✍🏾
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [Carlos David Guevara Martinez GM172474](https://www.github.com/CarlosGuevara79)
+una disculpa pero este es mi usuario con el que hice commits aparece cguevara porque realice el proyecto en la pc que tambien trabajo pero mi usuario principal es [@CarlosGuevara79](https://www.github.com/CarlosGuevara79)
 
-## Deploy on Vercel
+## Demo🖥️
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Aqui puedes ver una demo del funcionamiento😇
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+https://sistema-gestion-proyectos-xi.vercel.app/
