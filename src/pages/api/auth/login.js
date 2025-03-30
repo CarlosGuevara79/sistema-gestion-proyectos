@@ -11,7 +11,7 @@ export default async function handler(req, res) {
       where: { email },
       include: db.Rol // agregar el rol a la consulta
     })
-
+    console.log(usuario)
     if (!usuario) {
       return res.status(401).json({ error: 'Credenciales inválidas' })
     }

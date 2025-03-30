@@ -24,7 +24,7 @@ export default function Dashboard() {
 
   // console.log("as", tareasAsignadas)
 
-  if (loadingProyectos || loadingTareas) return <Loading/>
+  if (loadingProyectos || loadingTareas) return <Loading />
 
   const totalTareas = tareasAsignadas.filter(t => t.estado === 'pendiente').length
   const tareasEnProgreso = tareasAsignadas.filter(t => t.estado === 'en progreso').length
@@ -35,6 +35,15 @@ export default function Dashboard() {
       <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
 
       <h2 className="text-xl font-semibold mb-4">Mis Proyectos</h2>
+      {(user?.rol === 'Administrador' || user?.rol === 'Gerente') && (
+        <div className="flex justify-end mb-4">
+          <Link href="/proyectos/crear">
+            <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+              + Crear Nuevo Proyecto
+            </button>
+          </Link>
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {proyectos.map(proyecto => (
           <Link key={proyecto.id} href={`/proyectos/${proyecto.id}`}>
@@ -49,24 +58,24 @@ export default function Dashboard() {
       {/* Sección Estadísticas */}
       <div className="mt-10">
         <h2 className="text-xl font-semibold mb-4">Estadísticas de Tareas</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link href={`/tareas`}>
-          <div className="bg-red-500 text-white p-4 rounded shadow text-center">
-            <h3 className="text-3xl font-bold">{totalTareas}</h3>
-            <p className="text-sm font-semibold">Tareas Pendientes</p>
-          </div>
+            <div className="bg-red-500 text-white p-4 rounded shadow text-center">
+              <h3 className="text-3xl font-bold">{totalTareas}</h3>
+              <p className="text-sm font-semibold">Tareas Pendientes</p>
+            </div>
           </Link>
           <Link href={`/tareas`}>
-          <div className="bg-yellow-500 text-white p-4 rounded shadow text-center">
-            <h3 className="text-3xl font-bold">{tareasEnProgreso}</h3>
-            <p className="text-sm font-semibold">Tareas en Progreso</p>
-          </div>
+            <div className="bg-yellow-500 text-white p-4 rounded shadow text-center">
+              <h3 className="text-3xl font-bold">{tareasEnProgreso}</h3>
+              <p className="text-sm font-semibold">Tareas en Progreso</p>
+            </div>
           </Link>
           <Link href={`/tareas`}>
-          <div className="bg-green-500 text-white p-4 rounded shadow text-center">
-            <h3 className="text-3xl font-bold">{tareasCompletadas}</h3>
-            <p className="text-sm font-semibold">Tareas Completadas</p>
-          </div>
+            <div className="bg-green-500 text-white p-4 rounded shadow text-center">
+              <h3 className="text-3xl font-bold">{tareasCompletadas}</h3>
+              <p className="text-sm font-semibold">Tareas Completadas</p>
+            </div>
           </Link>
         </div>
       </div>
