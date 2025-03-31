@@ -15,7 +15,9 @@ interactuar con una API REST para almacenar y recuperar datos.
 
 https://sistema-gestion-proyectos-xi.vercel.app/ 
 
-### VIDEO DE EXP
+#### Puedes encontrar un documento PDF dentro de los fuentes con el nombre PROYECTO1_GM172474😇
+
+### VIDEO DE EXPLICACION(Coming Soon)😇
 
 
 ## Installation💻
@@ -54,7 +56,7 @@ npm run dev
 ```
 
 ## Estructura del proyecto 👨🏾‍💻👨🏾‍💻✍🏾
-
+```yaml
 sistema-gestion-proyectos/
 ├── public/                      # Archivos estáticos (imágenes, íconos, etc.)
 ├── src/
@@ -119,6 +121,8 @@ sistema-gestion-proyectos/
 ├── package.json
 ├── README.md                    # Documentación del proyecto
 └── tailwind.config.js
+```
+
 
 ## Authors 👨🏾‍💻👨🏾‍💻✍🏾
 
