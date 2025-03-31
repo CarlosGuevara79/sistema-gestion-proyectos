@@ -19,7 +19,6 @@ export default function TareaDetalle() {
   const [formEdit, setFormEdit] = useState({ titulo: '', descripcion: '', estado: '', asignado_a: '' })
   const [puedeComentar, setPuedeComentar] = useState(false)
   //variable para saber si el usuario puede editar o no 
-
   const { data: tarea, isLoading: cargandoTarea } = useQuery({
     queryKey: ['tarea', tareaId],
     queryFn: () => getTarea(tareaId),
@@ -71,21 +70,23 @@ export default function TareaDetalle() {
     }
   }, [tarea, usuariosProyecto, user])
 
-  if (cargandoTarea || !tarea) return <Loading/>
+  if (cargandoTarea || !tarea) return <Loading />
 
   // console.log(puedeEditar)
-  const puedeEditar = tarea.asignado_a === user?.id || esAdminOGerente
   const esAdminOGerente = user?.rol === 'Administrador' || user?.rol === 'Gerente'
+  const puedeEditar = tarea.asignado_a === user?.id || esAdminOGerente
+  console.log(comentarios)
   return (
     <div className="p-8 max-w-3xl mx-auto bg-white rounded shadow">
-            <BackButton className="mb-4" />
+      <BackButton className="mb-4" />
 
       <h1 className="text-2xl font-bold mb-4">Detalle de Tarea</h1>
 
       <h2 className="text-xl font-bold">{tarea.titulo}</h2>
-      <p className="text-gray-700 mt-2"><strong>Descripción:</strong> {tarea.descripcion || 'Sin descripción'}</p>
+      <p className="mt-2"><strong>Descripción:</strong> {tarea.descripcion || 'Sin descripción'}</p>
       <p className="mt-2"><strong>Estado:</strong> {tarea.estado}</p>
       <p className="mt-2"><strong>Asignado a:</strong> {usuariosProyecto?.find(u => u.id === tarea.asignado_a)?.nombre || 'Sin asignar'}</p>
+
 
       {puedeEditar && (
         <button
@@ -97,13 +98,23 @@ export default function TareaDetalle() {
       )}
 
       <hr className="my-6" />
-
-      <h3 className="text-lg font-bold mb-2">Comentarios</h3>
+      <h3 className="text-lg font-bold mb-2">Comentarios  {comentarios?.length}</h3>
       {comentarios?.length === 0 && <p className="text-gray-500">No hay comentarios aún.</p>}
       {comentarios?.map(c => (
         <div key={c.id} className="mb-3 border-b pb-2">
-          <p className="text-sm text-gray-600 font-semibold">{c.Usuario?.nombre || 'Usuario'}</p>
-          <p>{c.comentario}</p>
+          <p className="text-l text-gray-700 font-bold">{c.Usuario?.nombre || 'Usuario'}</p>
+          <p className="text-l text-black-600 semi-bold">{c.comentario}</p>
+          <p className="text-xs font-semibold">
+            {new Date(c.creado_en).toLocaleString('es-ES', {
+              timeZone: 'America/El_Salvador',
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true
+            })}
+          </p>
         </div>
       ))}
       {puedeComentar && (

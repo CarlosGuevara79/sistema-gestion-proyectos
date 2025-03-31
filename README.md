@@ -7,6 +7,17 @@
 Proyecto para la materia DPS desarrollar un sistema de gestión de proyectos utilizando React y Next que permita a los
 usuarios registrarse, iniciar sesión y gestionar proyectos y tareas. El sistema debe
 interactuar con una API REST para almacenar y recuperar datos. 
+
+
+## Demo🖥️
+
+#### Aqui puedes ver una demo del funcionamiento😇
+
+https://sistema-gestion-proyectos-xi.vercel.app/ 
+
+### VIDEO DE EXPLICACION
+
+
 ## Installation💻
 
 #### Para poder ejecutar el proyecto se recomienda ejecutar lo siguiente 💡
@@ -37,15 +48,74 @@ DATABASE_URL="postgres://postgres.gkzttocipkgjmeeebijx:pozScSrGMJaYSa2Y@aws-0-us
 NEXTAUTH_SECRET=33962fbb-7f8b-41d4-bdd6-02b4b476f89c
 ```
 
+## Estructura del proyecto 👨🏾‍💻👨🏾‍💻✍🏾
 
+sistema-gestion-proyectos/
+├── public/                      # Archivos estáticos (imágenes, íconos, etc.)
+├── src/
+│   ├── components/              # Componentes reutilizables (Botones, Modales, etc.)
+│   │   ├── ui/
+│   │   │   ├── BackButton.js
+│   │   │   ├── InputField.js
+│   │   │   ├── Loading.js
+│   │   │   ├── Modal.js  
+│   ├── context/                 # Contextos globales
+│   │   └── AuthContext.js
+│   ├── hooks/                   # Custom hooks
+│   │   └── useRequireAuth.js
+│   ├── layouts/                 # Layouts como Sidebar o Navbar
+│   │   └── SidebarLayout.js
+│   ├── models/                  # Modelos Sequelize
+│   │   ├── index.js
+│   │   ├── usuario.js
+│   │   ├── proyecto.js
+│   │   ├── tarea.js
+│   │   ├── rol.js
+│   │   ├── permiso.js
+│   │   ├── comentario.js
+│   ├── pages/                   # Rutas de la app (Next.js)
+│   │   ├── api/
+│   │   │   ├── auth/
+│   │   │   │   ├── login.js
+│   │   │   │   └── registro.js
+│   │   │   ├── proyectos/
+│   │   │   │   ├── index.js
+│   │   │   │   ├── [id].js
+│   │   │   │   └── [id]/desasignar.js
+│   │   │   ├── tareas/
+│   │   │   │   ├── index.js
+│   │   │   │   └── [id].js
+│   │   │   ├── comentarios/
+│   │   │   │   ├── index.js
+│   │   │   │   └── [id].js
+│   │   │   └── usuarios/
+│   │   │       └── index.js
+│   │   ├── admin/
+│   │   │   └── gestion-roles.js
+│   │   ├── dashboard.js
+│   │   ├── proyectos/
+│   │   │   ├── [id].js
+│   │   │   └── crear.js
+│   │   ├── tareas/
+│   │   │   └── [id].js
+│   │   ├── index.js             # Login
+│   │   └── registro.js          # Registro
+│   ├── services/                # Llamadas a la API (axios)
+│   │   ├── auth.js
+│   │   ├── proyectos.js
+│   │   ├── tareas.js
+│   │   ├── comentarios.js
+│   │   └── usuarios.js
+│   ├── styles/                  # Estilos globales
+│   │   └── globals.css
+├── .env.local                   # Variables de entorno locales
+├── .gitignore
+├── next.config.js
+├── package.json
+├── README.md                    # Documentación del proyecto
+└── tailwind.config.js
 
 ## Authors 👨🏾‍💻👨🏾‍💻✍🏾
 
 - [Carlos David Guevara Martinez GM172474](https://www.github.com/CarlosGuevara79)
 una disculpa pero este es mi usuario con el que hice commits aparece cguevara porque realice el proyecto en la pc que tambien trabajo pero mi usuario principal es [@CarlosGuevara79](https://www.github.com/CarlosGuevara79)
-
-## Demo🖥️
-
-#### Aqui puedes ver una demo del funcionamiento😇
-
-https://sistema-gestion-proyectos-xi.vercel.app/

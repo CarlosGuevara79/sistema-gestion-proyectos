@@ -7,15 +7,21 @@ import RolModel from './rol.js'
 import PermisoModel from './permiso.js'
 import ComentarioModel from './comentario.js'
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const isProduction = process.env.NODE_ENV === 'production'
+const dbUrl = process.env.DATABASE_URL
+
+const sequelize = new Sequelize(dbUrl, {
   dialect: 'postgres',
-  dialectModule: require('pg'), // I've added this.
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  }
+  dialectModule: require('pg'), // 👈 asegura que usa el módulo correcto
+  logging: false,
+  dialectOptions: isProduction
+    ? {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false
+        }
+      }
+    : {} // 👈 en local, sin SSL
 })
 
 const db = {
