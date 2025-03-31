@@ -15,6 +15,14 @@ interactuar con una API REST para almacenar y recuperar datos.
 
 https://sistema-gestion-proyectos-xi.vercel.app/ 
 
+###  usuarios para pruebas
+ADMIN
+user: admin@udb.com 
+pass: password
+MIEMBRO
+user: prueba@udb.com
+pass: password
+
 #### Puedes encontrar un documento PDF dentro de los fuentes con el nombre PROYECTO1_GM172474😇
 
 ### VIDEO DE EXPLICACION(Coming Soon)😇
@@ -29,20 +37,20 @@ git clone https://github.com/CarlosGuevara79/sistema-gestion-proyectos.git
 cd sistema-gestion-proyectos
 ```
 
-#### instalar dependencias 💡
+#### instalar dependencias 
 ```bash
 npm install
 ```
 
-## Creacion de archivo .env.local💡
+## Creacion de archivo .env.local
 
-#### si deseas utilizar una base de datos local puedes tomar la base de la carpeta /database que se encuentra en el proyecto y agrega la url de lo que creaste a tu env.local💡
+#### si deseas utilizar una base de datos local puedes tomar la base de la carpeta /database que se encuentra en el proyecto y agrega la url de lo que creaste a tu env.local
 ```bash
 DATABASE_URL=postgres://usuario:contraseña@host:puerto/nombre_db
 NEXTAUTH_SECRET=una-clave-secreta-segura
 ```
 
-#### si deseas utilizar la base de datos existente en supabase solo adjunta estos campos en tu .env.local💡
+#### si deseas utilizar la base de datos existente en supabase solo adjunta estos campos en tu .env.local
 
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:4000/api
@@ -50,7 +58,7 @@ DATABASE_URL="postgres://postgres.gkzttocipkgjmeeebijx:pozScSrGMJaYSa2Y@aws-0-us
 NEXTAUTH_SECRET=33962fbb-7f8b-41d4-bdd6-02b4b476f89c
 ```
 
-## Ejecutar proyecto en modo desarrollo 💡
+### Ejecutar proyecto en modo desarrollo 
 ```bash
 npm run dev
 ```
