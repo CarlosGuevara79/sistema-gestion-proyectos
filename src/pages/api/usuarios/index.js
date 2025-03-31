@@ -11,8 +11,26 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    const usuario = await db.Usuario.create(req.body)
-    return res.status(201).json(usuario)
+    try {
+      const { nombre, email, password, rol } = req.body
+  
+      const rolEncontrado = await db.Rol.findOne({ where: { nombre: rol } })
+      if (!rolEncontrado) {
+        return res.status(400).json({ error: 'Rol no válido' })
+      }
+  
+      const nuevoUsuario = await db.Usuario.create({
+        nombre,
+        email,
+        password,
+        rol_id: rolEncontrado.id
+      })
+  
+      return res.status(201).json(nuevoUsuario)
+    } catch (error) {
+      console.error('Error al crear usuario:', error)
+      return res.status(500).json({ error: 'Error al crear usuario' })
+    }
   }
 
   res.setHeader('Allow', ['GET','POST'])
