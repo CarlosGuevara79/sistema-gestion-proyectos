@@ -10,6 +10,11 @@ export default async function handler(req, res) {
     return res.status(200).json(usuarios)
   }
 
-  res.setHeader('Allow', ['GET'])
+  if (req.method === 'POST') {
+    const usuario = await db.Usuario.create(req.body)
+    return res.status(201).json(usuario)
+  }
+
+  res.setHeader('Allow', ['GET','POST'])
   res.status(405).end(`Method ${req.method} Not Allowed`)
 }
