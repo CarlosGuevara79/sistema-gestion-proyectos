@@ -1,4 +1,5 @@
 import db from '@/models'
+import bcrypt from 'bcryptjs'
 
 export default async function handler(req, res) {
   await db.sequelize.sync()
