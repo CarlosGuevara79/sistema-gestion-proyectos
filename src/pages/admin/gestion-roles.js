@@ -197,6 +197,7 @@ export default function GestionRoles() {
           />
 
           <label className="block mb-1 font-medium">Contraseña:</label>
+          
           <input
             type="password"
             value={nuevoUsuario.password}

@@ -18,11 +18,14 @@ export default async function handler(req, res) {
       if (!rolEncontrado) {
         return res.status(400).json({ error: 'Rol no válido' })
       }
-  
+
+      const hashedPassword = await bcrypt.hash(password, 10)
+
+
       const nuevoUsuario = await db.Usuario.create({
         nombre,
         email,
-        password,
+        password: hashedPassword,
         rol_id: rolEncontrado.id
       })
   
