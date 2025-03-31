@@ -15,7 +15,7 @@ interactuar con una API REST para almacenar y recuperar datos.
 
 https://sistema-gestion-proyectos-xi.vercel.app/ 
 
-### VIDEO DE EXPLICACION
+### VIDEO DE EXP
 
 
 ## Installation💻
@@ -46,6 +46,11 @@ NEXTAUTH_SECRET=una-clave-secreta-segura
 NEXT_PUBLIC_API_URL=http://localhost:4000/api
 DATABASE_URL="postgres://postgres.gkzttocipkgjmeeebijx:pozScSrGMJaYSa2Y@aws-0-us-east-1.pooler.supabase.com:6543/postgres"
 NEXTAUTH_SECRET=33962fbb-7f8b-41d4-bdd6-02b4b476f89c
+```
+
+## Ejecutar proyecto en modo desarrollo 💡
+```bash
+npm run dev
 ```
 
 ## Estructura del proyecto 👨🏾‍💻👨🏾‍💻✍🏾

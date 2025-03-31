@@ -47,7 +47,7 @@ export default function Sidebar() {
         </Link>
         {user?.rol === 'Administrador' && (
           <Link href="/admin/gestion-roles" className="block py-2 hover:underline">
-            {open ? <span className="font-semibold">📜 Gestion de Roles</span> : '📜'}
+            {open ? <span className="font-semibold">📜 Gestion de Usuarios</span> : '📜'}
             </Link>
         )}
       </nav>

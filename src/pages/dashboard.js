@@ -45,14 +45,20 @@ export default function Dashboard() {
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {proyectos.map(proyecto => (
-          <Link key={proyecto.id} href={`/proyectos/${proyecto.id}`}>
-            <div className="bg-white p-4 rounded shadow cursor-pointer hover:bg-gray-100">
-              <h3 className="font-semibold text-lg">{proyecto.nombre}</h3>
-              <p className="text-gray-600 text-sm">{proyecto.descripcion}</p>
-            </div>
-          </Link>
-        ))}
+        {proyectos
+          .filter(proyecto =>
+            user?.rol === 'Administrador' ||
+            user?.rol === 'Gerente' ||
+            proyecto.Usuarios?.some(u => u.id === user?.id)
+          )
+          .map(proyecto => (
+            <Link key={proyecto.id} href={`/proyectos/${proyecto.id}`}>
+              <div className="bg-white p-4 rounded shadow cursor-pointer hover:bg-gray-100">
+                <h3 className="font-semibold text-lg">{proyecto.nombre}</h3>
+                <p className="text-gray-600 text-sm">{proyecto.descripcion}</p>
+              </div>
+            </Link>
+          ))}
       </div>
 
       {/* Sección Estadísticas */}
