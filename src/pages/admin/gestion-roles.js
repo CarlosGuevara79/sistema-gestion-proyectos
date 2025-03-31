@@ -3,10 +3,10 @@ import { getUsuarios, cambiarRolUsuario } from '@/services/usuarios'
 import { getRoles } from '@/services/roles'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Modal from '@/components/ui/Modal'
 import BackButton from '@/components/ui/BackButton'
-import { editarUsuario } from '@/services/usuarios'
+import { editarUsuario, crearUsuario } from '@/services/usuarios'
 import Loading from '@/components/ui/Loading'
 
 export default function GestionRoles() {
@@ -19,11 +19,19 @@ export default function GestionRoles() {
   const [nuevoRol, setNuevoRol] = useState('')
   const [nuevoEmail, setNuevoEmail] = useState('')
   const [errorEmail, setErrorEmail] = useState(null)
+  const [modalAgregarAbierto, setModalAgregarAbierto] = useState(false)
+  const [nuevoUsuario, setNuevoUsuario] = useState({
+    nombre: '',
+    email: '',
+    password: '',
+    rol: ''
+  })
+  const [errorForm, setErrorForm] = useState(null)
 
   const esEmailValido = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
-  
+
   useEffect(() => {
     if (user?.rol !== 'Administrador') {
       router.push('/dashboard')
@@ -38,6 +46,15 @@ export default function GestionRoles() {
   const { data: roles, isLoading: loadingRoles } = useQuery({
     queryKey: ['roles'],
     queryFn: getRoles
+  })
+
+  const crearUsuarioMutation = useMutation({
+    mutationFn: crearUsuario,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['usuarios'])
+      setModalAgregarAbierto(false)
+      setNuevoUsuario({ nombre: '', email: '', password: '', rol: '' })
+    }
   })
 
   const editarUsuarioMutation = useMutation({
@@ -55,15 +72,22 @@ export default function GestionRoles() {
     setNuevoEmail(usuario.email)
     setModalAbierto(true)
   }
-
-  if (loadingUsuarios || loadingRoles) return <Loading/>
+  if (!user) return <Loading />
+  if (loadingUsuarios || loadingRoles) return <Loading />
 
   return (
     <div className="p-10">
       <BackButton className="mb-4" />
 
       <h1 className="text-3xl font-bold mb-4">Gestión de Usuarios</h1>
-
+      {user?.rol === 'Administrador' && (
+        <button
+          onClick={() => setModalAgregarAbierto(true)}
+          className="mb-4 bg-green-600 text-white px-4 py-2 rounded"
+        >
+          + Agregar Usuario
+        </button>
+      )}
       <table className="w-full border-collapse bg-white rounded shadow">
         <thead>
           <tr>
@@ -150,6 +174,79 @@ export default function GestionRoles() {
         {errorEmail && <p className="text-red-500 mt-2">{errorEmail}</p>}
 
       </Modal>
+      <Modal
+        isOpen={modalAgregarAbierto}
+        onClose={() => setModalAgregarAbierto(false)}
+        title="Agregar Nuevo Usuario"
+      >
+        <div className="p-4">
+          <label className="block mb-1 font-medium">Nombre:</label>
+          <input
+            type="text"
+            value={nuevoUsuario.nombre}
+            onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, nombre: e.target.value })}
+            className="w-full border p-2 rounded mb-3"
+          />
+
+          <label className="block mb-1 font-medium">Email:</label>
+          <input
+            type="email"
+            value={nuevoUsuario.email}
+            onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })}
+            className="w-full border p-2 rounded mb-3"
+          />
+
+          <label className="block mb-1 font-medium">Contraseña:</label>
+          <input
+            type="password"
+            value={nuevoUsuario.password}
+            onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, password: e.target.value })}
+            className="w-full border p-2 rounded mb-3"
+          />
+
+          <label className="block mb-1 font-medium">Rol:</label>
+          <select
+            value={nuevoUsuario.rol}
+            onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, rol: e.target.value })}
+            className="w-full border p-2 rounded mb-4"
+          >
+            <option value="">Selecciona un rol</option>
+            {roles.map((rol) => (
+              <option key={rol.id} value={rol.nombre}>{rol.nombre}</option>
+            ))}
+          </select>
+
+          {errorForm && <p className="text-red-500 text-sm mb-3">{errorForm}</p>}
+
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setModalAgregarAbierto(false)}
+              className="px-4 py-2 border rounded text-gray-700"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={() => {
+                const { nombre, email, password, rol } = nuevoUsuario
+                if (!nombre || !email || !password || !rol) {
+                  setErrorForm('Todos los campos son obligatorios.')
+                  return
+                }
+                if (!esEmailValido(email)) {
+                  setErrorForm('Correo inválido.')
+                  return
+                }
+                setErrorForm(null)
+                crearUsuarioMutation.mutate(nuevoUsuario)
+              }}
+              className="bg-green-600 text-white px-4 py-2 rounded"
+            >
+              Crear Usuario
+            </button>
+          </div>
+        </div>
+      </Modal>
+
     </div>
   )
 }
