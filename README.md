@@ -25,7 +25,13 @@ pass: password
 
 #### Puedes encontrar un documento PDF dentro de los fuentes con el nombre PROYECTO1_GM172474😇
 
-### VIDEO DE EXPLICACION(Coming Soon)😇
+### VIDEO DE EXPLICACION😇
+VER VIDEOOOO!!!!
+
+
+https://youtu.be/MUzEJF8vbVc
+
+PD: Una disculpa por la voz pero tuve que subirle un poco la velocidad ya que duraba bastante el video, muchas gracias por ver!!
 
 
 ## Installation💻
